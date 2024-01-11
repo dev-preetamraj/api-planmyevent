@@ -5,10 +5,10 @@ from fastapi.exceptions import HTTPException
 from jose import jwt, JWTError
 
 from accounts.models import User
-from planMyTrip.conf import settings
-from planMyTrip.database import session
-from planMyTrip.logger import logger
-from planMyTrip.utils.custom_exceptions import InternalServerError
+from planMyEvent.conf import settings
+from planMyEvent.database import session
+from planMyEvent.logger import logger
+from planMyEvent.utils.custom_exceptions import InternalServerError
 
 
 class CustomAuthentication:

@@ -4,8 +4,8 @@ from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
 from accounts.models import User
-from planMyTrip.conf import settings
-from planMyTrip.logger import logger
+from planMyEvent.conf import settings
+from planMyEvent.logger import logger
 
 
 class JwtManager:

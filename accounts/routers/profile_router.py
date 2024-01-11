@@ -5,10 +5,10 @@ from fastapi import APIRouter, status
 from pydantic import BaseModel, EmailStr
 
 from accounts.auth_manager import user_dependency
-from planMyTrip.logger import logger
-from planMyTrip.utils.custom_exceptions import InternalServerError
-from planMyTrip.utils.custom_response import CustomResponse
-from planMyTrip.utils.custom_response_schema import CustomResponseModel
+from planMyEvent.logger import logger
+from planMyEvent.utils.custom_exceptions import InternalServerError
+from planMyEvent.utils.custom_response import CustomResponse
+from planMyEvent.utils.custom_response_schema import CustomResponseModel
 
 router = APIRouter()
 

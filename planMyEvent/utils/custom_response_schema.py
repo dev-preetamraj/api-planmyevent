@@ -1,9 +1,10 @@
-from pydantic import BaseModel
 from typing import Any
+
+from pydantic import BaseModel
 
 
 class CustomResponseModel(BaseModel):
     success: bool
     status_code: int
-    data: Any
     message: str
+    data: Any

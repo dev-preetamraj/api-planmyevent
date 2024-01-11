@@ -3,8 +3,9 @@ from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from accounts.routers import token_router, register_user_router, profile_router
-from planMyTrip.utils.custom_exceptions import InternalServerError
-from planMyTrip.utils.custom_response import CustomResponse
+from events.routers import create_event_route
+from planMyEvent.utils.custom_exceptions import InternalServerError
+from planMyEvent.utils.custom_response import CustomResponse
 
 app = FastAPI()
 
@@ -55,3 +56,5 @@ app.include_router(
     register_user_router.router, prefix="/api/v1/auth", tags=["Accounts"]
 )
 app.include_router(profile_router.router, prefix="/api/v1/auth/me", tags=["Accounts"])
+
+app.include_router(create_event_route.router, prefix="/api/v1/event", tags=["Events"])

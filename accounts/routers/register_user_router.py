@@ -1,16 +1,16 @@
 from enum import Enum
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from pydantic import BaseModel, EmailStr, field_validator, model_validator, Field
 from sqlalchemy.orm import Session
 
 from accounts.models import User
 from accounts.repository import AccountsRepository
-from planMyTrip.database import db_dependency
-from planMyTrip.logger import logger
-from planMyTrip.utils.custom_exceptions import InternalServerError
-from planMyTrip.utils.custom_response import CustomResponse
-from planMyTrip.utils.custom_response_schema import CustomResponseModel
+from planMyEvent.database import get_db
+from planMyEvent.logger import logger
+from planMyEvent.utils.custom_exceptions import InternalServerError
+from planMyEvent.utils.custom_response import CustomResponse
+from planMyEvent.utils.custom_response_schema import CustomResponseModel
 
 router = APIRouter(prefix="/register")
 
@@ -86,7 +86,7 @@ class RegisterUserResponseModel(CustomResponseModel):
     "/", status_code=status.HTTP_201_CREATED, response_model=RegisterUserResponseModel
 )
 async def register_user_route(
-    data: RegisterUserRequestModel, db: Session = db_dependency
+    data: RegisterUserRequestModel, db: Session = Depends(get_db)
 ):
     try:
         role = data.role.value

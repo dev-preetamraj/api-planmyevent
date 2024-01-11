@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from accounts.models import User
-from planMyTrip.database import session
+from planMyEvent.database import session
 
 
 class AccountsRepository:

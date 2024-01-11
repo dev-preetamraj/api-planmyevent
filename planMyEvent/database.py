@@ -1,9 +1,8 @@
-from fastapi import Depends
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 
-from planMyTrip.conf import settings
+from planMyEvent.conf import settings
 
 engine = create_engine(settings.DB_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -20,6 +19,4 @@ def get_db():
 
 
 generator = get_db()
-
-db_dependency: Session = Depends(get_db)
 session = next(generator)

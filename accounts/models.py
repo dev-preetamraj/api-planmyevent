@@ -5,8 +5,8 @@ from sqlalchemy import Column, ForeignKey, String, DateTime, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from planMyTrip.database import Base
-from planMyTrip.utils.models import TimestampMixin
+from planMyEvent.database import Base
+from planMyEvent.utils.models import TimestampMixin
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

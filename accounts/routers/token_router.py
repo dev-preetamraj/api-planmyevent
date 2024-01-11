@@ -1,14 +1,14 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
 from accounts.jwt_manager import JwtManager
 from accounts.models import User
-from planMyTrip.database import db_dependency
-from planMyTrip.logger import logger
-from planMyTrip.utils.custom_exceptions import InternalServerError
-from planMyTrip.utils.custom_response import CustomResponse
-from planMyTrip.utils.custom_response_schema import CustomResponseModel
+from planMyEvent.database import get_db
+from planMyEvent.logger import logger
+from planMyEvent.utils.custom_exceptions import InternalServerError
+from planMyEvent.utils.custom_response import CustomResponse
+from planMyEvent.utils.custom_response_schema import CustomResponseModel
 
 router = APIRouter()
 jwt_manager = JwtManager()
@@ -26,7 +26,7 @@ class CreateTokenResponseData(BaseModel):
 
 
 class CreateTokenResponseModel(CustomResponseModel):
-    data: CreateTokenResponseData | None
+    data: CreateTokenResponseData
 
 
 # Refresh Token
@@ -39,7 +39,7 @@ class RefreshTokenResponseData(BaseModel):
 
 
 class RefreshTokenResponseModel(CustomResponseModel):
-    data: RefreshTokenResponseData | None
+    data: RefreshTokenResponseData
 
 
 # Verify Token
@@ -53,7 +53,7 @@ class VerifyTokenRequestModel(BaseModel):
     response_model=CreateTokenResponseModel,
 )
 async def create_token_route(
-    data: CreateTokenRequestModel, db: Session = db_dependency
+    data: CreateTokenRequestModel, db: Session = Depends(get_db)
 ):
     try:
         user: User | None = db.query(User).filter_by(email=data.email).first()
@@ -63,7 +63,7 @@ async def create_token_route(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 data=None,
                 message="User not found",
-            )
+            ).json_response()
 
         if not user.verify_password(data.password):
             return CustomResponse(
@@ -71,7 +71,7 @@ async def create_token_route(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 data=None,
                 message="Invalid credentials",
-            )
+            ).json_response()
         access_token = jwt_manager.create_access_token(str(user.id))
         refresh_token = jwt_manager.create_refresh_token(str(user.id))
         return_data = {"access_token": access_token, "refresh_token": refresh_token}
@@ -93,7 +93,7 @@ async def create_token_route(
     response_model=RefreshTokenResponseModel,
 )
 async def refresh_token_route(
-    data: RefreshTokenRequestModel, db: Session = db_dependency
+    data: RefreshTokenRequestModel, db: Session = Depends(get_db)
 ):
     try:
         refresh_token = data.refresh_token
@@ -104,7 +104,7 @@ async def refresh_token_route(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 data=None,
                 message="Refresh token is invalid or expired",
-            )
+            ).json_response()
         return_data = {"access_token": access_token}
 
         return CustomResponse(
@@ -128,7 +128,7 @@ async def verify_token_route(data: VerifyTokenRequestModel):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 data=None,
                 message="Access token is invalid or expired",
-            )
+            ).json_response()
 
         return CustomResponse(
             success=True,
