@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from accounts.routers import token_router, register_user_router, profile_router
-from events.routers import create_event_route
+from events.routers import create_event_router, get_events_router
 from planMyEvent.utils.custom_exceptions import InternalServerError
 from planMyEvent.utils.custom_response import CustomResponse
 
@@ -57,4 +57,5 @@ app.include_router(
 )
 app.include_router(profile_router.router, prefix="/api/v1/auth/me", tags=["Accounts"])
 
-app.include_router(create_event_route.router, prefix="/api/v1/event", tags=["Events"])
+app.include_router(create_event_router.router, prefix="/api/v1/event", tags=["Events"])
+app.include_router(get_events_router.router, prefix="/api/v1/event", tags=["Events"])
